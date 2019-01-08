@@ -194,6 +194,25 @@ The default is 25.
 Specifies the maximum P2P peer connections for peers that are trailing behind the local chain head. 
 The default is unlimited but the number of trailing peers cannot exceed the value specified by [`--max-peers`](#max-peers).
 
+### --metrics-enabled
+
+```bash tab="Syntax"
+--metrics-enabled
+```
+
+Set to `true` to enable the [Prometheus](https://prometheus.io/) monitoring service to access Pantheon client metrics.
+The default is `false`.
+
+### --metrics-listen
+
+```bash tab="Syntax"
+--metrics-listen
+```
+
+Specifies the host and port on which the [Prometheus](https://prometheus.io/) monitoring service accesses Pantheon
+client metrics. The default is `127.0.0.1:9545`. The metrics server respects the [--host-whitelist](#host-whitelist)
+flag for DNS rebind attack protection on RPC.
+
 ### miner-coinbase
 
 ```bash tab="Syntax"
