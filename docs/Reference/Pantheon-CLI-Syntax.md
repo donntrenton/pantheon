@@ -229,7 +229,7 @@ The default is unlimited but the number of trailing peers cannot exceed the valu
 --metrics-enabled
 ```
 
-Set to `true` to enable the [Prometheus](https://prometheus.io/) monitoring service to access Pantheon client metrics.
+Set to `true` to enable the [Prometheus](https://prometheus.io/) monitoring service to access [Pantheon metrics](../Using-Pantheon/Debugging.md#monitor-node-performance-using-third-party-clients).
 The default is `false`.
 
 ### metrics-listen
@@ -239,8 +239,7 @@ The default is `false`.
 ```
 
 Specifies the host and port on which the [Prometheus](https://prometheus.io/) monitoring service accesses Pantheon
-client metrics. The default is `127.0.0.1:9545`. The metrics server respects the [`--host-whitelist`](#host-whitelist)
-flag for DNS rebind attack protection on RPC.
+metrics. The default is `127.0.0.1:9545`. The metrics server respects the [`--host-whitelist` option](#host-whitelist).
 
 ### miner-coinbase
 

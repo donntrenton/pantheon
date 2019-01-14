@@ -15,29 +15,48 @@ JSON-RPC API method.
 
 ## Monitor Node Performance Using Third-Party Clients
 
-You can monitor node performance using the [Prometheus](https://prometheus.io/) monitoring and alerting service.
-You can also visualize the collected data using [Grafana](https://grafana.com/).
+Set the [`--metrics-enabled` option](../Reference/Pantheon-CLI-Syntax.md#metrics-enabled) to true to enable the [Prometheus](https://prometheus.io/) monitoring and 
+alerting service to access Pantheon metrics. You can also visualize the collected data using [Grafana](https://grafana.com/).
 
-Use the Pantheon CLI option [`--metrics-enabled`](../Reference/Pantheon-CLI-Syntax.md#metrics-enabled) to allow
-Prometheus to access Pantheon client metrics.
+While Prometheus is running, it consumes the Pantheon data directly for monitoring. To specify the host and port on which 
+Prometheus accesses Pantheon data, use the [`--metrics-listen` option](../Reference/Pantheon-CLI-Syntax.md#metrics-listen). 
+The default host and port are 127.0.0.1:9545.
 
-While Prometheus is running on your system, it can consume the Pantheon client data directly for monitoring.
-Specify the host and port on which Prometheus accesses Pantheon client data using the CLI option
-[`--metrics-listen`](../Reference/Pantheon-CLI-Syntax.md#metrics-listen). The default host and port are 127.0.0.1:9545.
+You can install other Prometheus components such as the Alert Manager. Once you install these components, additional configuration
+ is not required because Prometheus handles and analyzes data directly from the feed.
 
-You can install other Prometheus components such as the Alert Manager. Once you install these components, you don't need to
-do additional configuration, because Prometheus handles and analyzes data directly from the feed.
-
-Here's an example of how you can set up and run Prometheus with Pantheon:
+Here's an example of setting up and running Prometheus with Pantheon:
 
 * Install the [prometheus main component](https://prometheus.io/download/) for the Prometheus monitoring system and
-time series database on your system.
+time series database. On MacOS you can install with [Homebrew](https://brew.sh/): 
+ ```bash
+ brew install prometheus
+ ```
 
-* Navigate to the directory in which you installed the Pantheon binary and run the command with the metrics options;
-for example:
+* Configure Prometheus to poll Pantheon. For example, add the following yaml fragment to the `scrape_configs`
+block of the `prometheus.yml` file:
+
+ ```yaml
+  job_name: pantheon-dev
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics
+    scheme: http
+    static_configs:
+    - targets:
+      - localhost:9545
+ ```
+
+!!!note
+   The [`--host-whitelist` option](../Reference/Pantheon-CLI-Syntax.md#host-whitelist) defaults to `localhost`.
+    If `127.0.0.1` is specified instead of `localhost` in the target, <test it works with host whitelist> 
+
+
+* Start Pantheon with the [`--metrics-enabled` option](../Reference/Pantheon-CLI-Syntax.md#metrics-enabled). For example, to start
+ a single node for testing with metrics enabled:
 
     ```bash
-    bin/pantheon --dev-mode --network-id="2018" --miner-enabled --miner-coinbase fe3b557e8fb62b89f4916b721be55ceb828dbd73
+    pantheon --dev-mode --network-id="2018" --miner-enabled --miner-coinbase fe3b557e8fb62b89f4916b721be55ceb828dbd73
     --rpc-cors-origins "all" --ws-enabled --rpc-enabled --metrics-enabled
     ```
 
