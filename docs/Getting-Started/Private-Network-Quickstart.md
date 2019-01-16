@@ -3,65 +3,71 @@ description: Pantheon private network quickstart tutorial
 
 # Private Network Quickstart tutorial
 
-!!! important "Upcoming Change in v0.9" 
-    In v0.9, the Private Network Quickstart will be moved to a separate repository and the existing Private Network Quickstart will be 
-    removed from the Pantheon repository. This tutorial will be updated and use the Private Network Quickstart in the separate 
-    repository. 
+!!! important
+    In v0.9, the Private Network Quickstart moved to a separate repository, and the previous version was removed from
+    the Pantheon repository.
 
 This tutorial describes how to use Pantheon to run a private network of Pantheon nodes in a Docker container.
 
 !!! note
-    To run the Private Network Quickstart, you must install Pantheon by [cloning and building](../Installation/Build-From-Source.md).
+    To run the Private Network Quickstart, install the code by cloning the `pantheon-quickstart` repo as described below.
     
-    If you have installed Pantheon from the [packaged binaries](Intallation/Install-Binaries) or are running the [Docker image](Run-Docker-Image), you can proceed with [Starting Pantheon](Starting-Pantheon).
+    If you have installed Pantheon from the [packaged binaries](../Installation/Install-Binaries.md) or are running the
+    [Docker image](Run-Docker-Image.md), you can proceed with [Starting Pantheon](Starting-Pantheon.md).
 
 ## Prerequisites
 
 To run this tutorial, you must have the following installed:
 
-- For MacOS and Linux, [Docker and Docker-compose](https://docs.docker.com/compose/install/) 
+- For MacOS and Linux: [Docker and Docker-compose](https://docs.docker.com/compose/install/) 
 
-- For Windows, [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
+- For Windows: [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
 
-!!!important
-    Docker for Windows requires Windows 10 Pro, Enterprise, or Education.
-    The Private Network Quickstart does not support Docker Toolbox.
+    !!!important
+        Docker for Windows requires Windows 10 Pro, Enterprise, or Education.
+        The Private Network Quickstart does not support Docker Toolbox.
 
 - [Git command line](https://git-scm.com/)
 
 - [Curl command line](https://curl.haxx.se/download.html) 
 
-- A web browser that supports [Metamask](https://metamask.io/) (currently Chrome, Firefox, Opera, and Brave), and has the MetaMask plug-in installed. This tutorial uses screenshots from Brave.
+- A web browser that supports [Metamask](https://metamask.io/) (currently Chrome, Firefox, Opera, and Brave), and has 
+the MetaMask plug-in installed. This tutorial uses screenshots from Brave.
 
 
 ## Clone Pantheon Source Code
 
-As indicated in [the installation section](../Installation/Build-From-Source.md#clone-the-pantheon-repository), clone the repository.
+Clone the repository from the `pantheon-quickstart` repo:
 
-## Build Docker Images and Start Services and Network
+```bash
+$ git clone --recursive https://github.com/PegaSysEng/pantheon-quickstart.git
+```
+
+
+## Start Services and Network
  
 This tutorial uses [Docker Compose](https://docs.docker.com/compose/) to simplify assembling images and 
-running in a private network. To run the containers, go to the `pantheon` directory and run the following commands:
+running in a private network. To build the docker images and run the containers, go to the directory in
+which you cloned the `pantheon-quickstart` repo and run:
 
-Run the following commands :
+```bash tab="Linux/MacOS"
+# Run the containers:
 
-```bash tab="Linux/macOS"
-# Shell script are provided in the Quickstart directory
-
-quickstart/runPantheonPrivateNetwork.sh
+./run.sh
 ```
 
-```bat tab="Windows"
-// Run the docker-compose commands directly
+```bash tab="Windows"
+// Run the containers:
 
-// Run the services and ask for 4 regular nodes
-quickstart\docker-compose up -d --scale node=4
-
-// List the endpoints
-quickstart\docker-compose port explorer 80
+.\run.sh
 ```
 
-This script builds Pantheon, builds the images and runs the containers. It will also scale the regular node container to four containers to simulate a network with enough peers to synchronize.
+!!! note
+    In MacOS, the shell scripts list the containers and endpoints automatically. In Windows, you need to use
+    `docker-compose` commands as noted below.
+
+The `run.sh` script builds Pantheon, builds the images, and runs the containers. It also scales the regular node 
+container to four containers to simulate a network with enough peers to synchronize.
 
 When the process ends, it lists the running services:
 
@@ -90,64 +96,76 @@ This is followed by a list of the endpoints:
     ****************************************************************
     ```
 
-- Use the **JSON-RPC HTTP service endpoint** to access the RPC node service from your Dapp or from cryptocurrency wallets such as Metamask.
-- Use the **JSON-RPC WebSocket service endpoint** to access the web socket node service from your Dapp. Use the form `ws://localhost:32770/jsonws`.
-- Use the **Web block explorer address** to display the block explorer web application. View the block explorer by entering the URL in your web browser.
+- Use the **JSON-RPC HTTP service endpoint** to access the RPC node service from your Dapp or from cryptocurrency
+wallets such as Metamask.
+- Use the **JSON-RPC WebSocket service endpoint** to access the web socket node service from your Dapp.
+- Use the **Web block explorer address** to display the block explorer web application. View the block explorer by
+entering the URL in your web browser.
 
-To display the list of endpoints again, run the following shell command:
+To display the list of endpoints again, run:
 
-```bash tab="Linux/macOS"
-# Shell script are provided in the Quickstart directory
+```bash tab="Linux/MacOS"
+# List the running containers:
 
-quickstart/listQuickstartServices.sh
+./list.sh
 ```
 
-```bat tab="Windows"
-// Run the docker-compose commands directly
+```bash tab="Windows"
+// List the containers and endpoints using docker-compose commands:
 
-quickstart\docker-compose port explorer 80
+docker-compose ps
+
+docker-compose port explorer 80
 ```
+
 
 ## Block Explorer
 
-This tutorial uses the [Alethio light block explorer](https://aleth.io/).
+This tutorial uses the [Alethio](https://aleth.io/) light block explorer.
 
 ### Run the Block Explorer
 
-Access the explorer by copying and pasting the `Web block explorer address` displayed when starting the private network to your browser.
+Access the explorer by copying and pasting the `Web block explorer address` displayed when starting the private network
+to your browser.
+
+!!! info "Windows"
+    On Windows, the docker-compose commands return a number such as `0.0.0.0:32777`, where the port number follows the
+    colon. You have to construct the block explorer URL using this port number; for example: `http://localhost:32777`.
 
 The block explorer displays a summary of the private network:
 
 ![Block Explorer](ExplorerSummary.png)
 
-Notice the explorer indicates 6 peers: the 4 regular nodes, the mining node and the bootnode.
+Notice that the explorer indicates 6 peers: the 4 regular nodes, the mining node and the bootnode.
 
-Click on the block number to the right of **Best Block** to display the block details. 
+Click the block number to the right of **Best Block** to display the block details:
 
 ![Block Details](ExplorerBlockDetails.png)
 
-You can explore blocks by clicking on the blocks under **Bk** down the left-hand side. 
+You can explore blocks by clicking on the blocks under **Bk** on the left-hand side.
 
-You can search for a specific block, transaction hash, or address by clicking the magnifying glass in the top left-hand corner. 
+You can search for a specific block, transaction hash, or address by clicking the magnifying glass in the top left-hand corner.
 
 ![Explorer Search](ExplorerSearch.png)
 
+
 ## Run JSON-RPC Requests 
 
-Now we're ready to run requests.
+You can run RPC requests on `rpcnode`, the node exposed to the host in order to listen for requests. This tutorial uses 
+[cURL](https://curl.haxx.se/download.html) to make JSON-RPC requests.
 
-You can run RPC requests on `rpcnode`, the node that is exposed to the host in order to listen for requests. This tutorial uses [cURL](https://curl.haxx.se/download.html) to make JSON-RPC requests.
+!!! tip "Windows"
+    We recommend using [Postman](https://www.getpostman.com/) or a similar client to make RPC requests on Windows.
+    Using cURL via Command Prompt or Windows PowerShell might not work.
 
-!!!tip
-    **On Windows:** We suggest using [Postman](https://www.getpostman.com/) or a similar client to make RPC requests.
-    
-    Using curl via Command Prompt or Windows PowerShell might not work.
+For the RPC URL, this tutorial uses the placeholder `http://localhost:http-rpc-port`. When you run the tutorial, 
+replace `http-rpc-port` with the JSON-RPC HTTP service endpoint provided when you list the endpoints. (For example, 
+`http://localhost:32770/jsonrpc`.) The dynamic docker port mapping changes each time you run the network.
 
-This tutorial uses the placeholder `http://localhost:http-rpc-port`. When you run this tutorial, replace `http-rpc-port` with the JSON-RPC HTTP service endpoint provided when you list the endpoints. (For example, `http://localhost:32770/jsonrpc`.) The dynamic docker port mapping changes each time you run the network.
 
 ### Requesting the Node Version
 
-Run the following command from the host shell :
+Run the following command from the host shell:
 
 ```bash
 curl -X POST --data '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}' http://localhost:http-rpc-port
@@ -164,7 +182,6 @@ The result should be as follows:
 ```
 Here we simply query the version of the Pantheon node, which confirms the node is running.
 
-Now if this works, let's see some more interesting requests.
 
 ### Counting Peers
 
@@ -186,7 +203,7 @@ The result should be the following response, indicating that there are 6 peers:
 }
 ```
 
-### Requesting the Most Recent Mined Block Number  
+### Requesting the Most Recently Mined Block Number  
 
 This provides the count of blocks already mined.
 
@@ -206,7 +223,7 @@ The result of this call should be:
 }
 ```
 
-Here the hexadecimal value `0x8b8` translates to `2232` in decimal; that many blocks have already been mined.
+The hexadecimal value `0x8b8` translates to `2232` in decimal, the number of blocks that have been mined so far.
 
 ### Checking the Miner Account Balance (Coinbase)
 
@@ -216,7 +233,7 @@ Then call `eth_getBalance` to retrieve the balance of the mining address defined
 curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xfe3b557e8fb62b89f4916b721be55ceb828dbd73","latest"],"id":1}' http://localhost:http-rpc-port
 ```
 
-The result of this call should be something like :
+The result should be similar to the following:
 
 ```json
 {
@@ -227,62 +244,63 @@ The result of this call should be something like :
 ```
 
 !!!info
-    0x79f905c6fd34e80000 = 2250000000000000000000 Wei (2250 Ether)
-    
-    you can use a unit [converter](https://etherconverter.online/) to go from wei to ether.
+    0x79f905c6fd34e80000 = 2250000000000000000000 Wei (2250 Ether).
+    Use a [unit converter](https://etherconverter.online/) to translate values from Wei to Ether.
 
-Wait a few seconds until new blocks are mined and make this call again. The balance should increase, 
-meaning that the miner address successfully received the mining reward.
+Wait several seconds until new blocks are mined and call this again. The balance should increase, meaning the miner
+address successfully received the mining reward.
 
-_Also you can see this information in the block explorer. It does exactly the same thing as we 
-did manually, connecting to the rpc node using http JSON-RPC, but displays information on a web page._
+You can also view this information in the block explorer. It does exactly the same thing as this call did, connecting
+to the RPC node using HTTP JSON-RPC, and displaying information on a web page.
+
 
 ### Creating a Transaction Using MetaMask
 
-Now we'll use [MetaMask](https://metamask.io/) to send transactions. 
+Now let's use [MetaMask](https://metamask.io/) to send transactions.
 
-To send transactions, you first need to create an account or use one of the 3 accounts below created during
-the genesis of this test network. 
+Before sending transactions, you need to create an account or use one of the accounts below created during the genesis
+of this private test network.
 
 {!global/test_accounts.md!}
 
 !!!note
-    Pantheon does not provide an accounts management system, so if you want to create your own account, you will have to use a third party tool like Metamask.
+    Pantheon doesn't provide an accounts management system, so if you want to create your own account, you have to use
+    a third-party tool such as MetaMask.
 
-
-After you sign in to MetaMask, connect to the private network RPC endpoint by:
+After you sign in to MetaMask, connect to the private network RPC endpoint:
 
 1. In the MetaMask network list, select **Custom RPC**.
-1. In the **New RPC URL** field, enter the `JSON-RPC HTTP service endpoint` displayed when you started the private network.
+1. In the **New RPC URL** field, enter the JSON-RPC HTTP service endpoint displayed when you started the private network.
 
 Save the configuration and return to the MetaMask main screen. Your current network is now set to the private network RPC node.
 
-[Import one of the existing accounts above into metamask](https://metamask.zendesk.com/hc/en-us/articles/360015489331-Importing-an-Account-New-UI-)
-using the corresponding private key. 
+[Import one of the existing accounts above into MetaMask](https://metamask.zendesk.com/hc/en-us/articles/360015489331-Importing-an-Account-New-UI-)
+using the corresponding private key.
 
 !!!note
-    Here we don't really care about securing the keys as it's just a tutorial, but be sure
-    to secure your accounts when you run into a real usecase. This will be discussed in a more advanced
-    chapter.**
+    In this tutorial, we don't need to secure the keys, because we're using a private test network to send valueless 
+    Ether. However, be sure to secure your accounts in a real use case on the main Ethereum network (MainNet).
 
-Once this is done, try to [create another account from scratch](https://metamask.zendesk.com/hc/en-us/articles/360015289452-Creating-Additional-MetaMask-Wallets-New-UI-)
-to send some ether to.
+Once this is done, [create another account from scratch](https://metamask.zendesk.com/hc/en-us/articles/360015289452-Creating-Additional-MetaMask-Wallets-New-UI-)
+to send Ether to.
 
-!!!info
-    Of course remember that here we are dealing with valueless ether as we are not on the main network but on a local private network.
+In MetaMask, select the new account and copy the account address by clicking the **...** gadget, then selecting 
+**Copy Address to clipboard**.
 
-In MetaMask, select the new account and copy the account address by clicking the **...** button and selecting **Copy Address to clipboard**.
+In the block explorer, search for the new account by clicking on the magnifying glass and pasting the account address
+into the search box. The account is displayed with a zero balance. 
 
-In the block explorer, search for the new account by clicking on the magnifying glass and pasting the account address into the search box. The account is displayed with a zero balance. 
+[Send Ether](https://metamask.zendesk.com/hc/en-us/articles/360015488991-Sending-Ether-New-UI-) from the first account 
+(containing ether) to the new one (which has a zero balance).
 
-[Send some ether](https://metamask.zendesk.com/hc/en-us/articles/360015488991-Sending-Ether-New-UI-) 
-from the first account (containing some ether) to the new one (that have a zero balance).
+Refresh the browser page that displays the new account. The updated balance is displayed and reflects the transaction
+completed using MetaMask.
 
-Click refresh on the browser page displaying the new account. The updated balance is displayed and reflects the transaction completed using MetaMask. 
 
 ### Truffle Pet Shop Tutorial
 
-With a couple of modifications, we can use the private network in this tutorial as the blockchain for the [PetShop tutorial on Truffle website](https://truffleframework.com/tutorials/pet-shop).
+With a few modifications, we can use the private network in this tutorial as the blockchain for the 
+[PetShop tutorial on Truffle website](https://truffleframework.com/tutorials/pet-shop).
 
 #### Prerequisites
 
@@ -296,21 +314,22 @@ Install Truffle :
 npm install -g truffle
 ```
 
-!!!note
-    `npm` requires `sudo` on Linux.  
+!!! note
+    `npm` requires `sudo` on Linux.
 
 Create a `pet-shop-tutorial` directory and move into it:
 
 ```bash
 mkdir pet-shop-tutorial
+
 cd pet-shop-tutorial
 ```
 
-Unpack Pet Shop [truffle box](https://truffleframework.com/boxes): 
+Unpack Pet Shop [Truffle box](https://truffleframework.com/boxes): 
 
 `truffle unbox pet-shop`
 
-Install the [wallet](https://www.npmjs.com/package/truffle-privatekey-provider):
+Install the [Truffle wallet](https://www.npmjs.com/package/truffle-privatekey-provider):
 
 ```bash
 npm install truffle-privatekey-provider
@@ -320,7 +339,8 @@ npm install truffle-privatekey-provider
 
 #### Modify the Pet Shop Example
 
-Modify the `truffle.js` file in the `pet-shop-tutorial` directory to add our wallet provider:
+Modify the `truffle.js` file in the `pet-shop-tutorial` directory to add our wallet provider. The following shows the
+code with placeholders to change as directed below:
 
 ```javascript
 const PrivateKeyProvider = require("truffle-privatekey-provider");
@@ -346,15 +366,15 @@ module.exports = {
 
 Replace `<YOUR HTTP RPC NODE ENDPOINT>` with your HTTP RPC node endpoint (for example, `http://localhost:32770/jsonrpc`).
 
-The private key is the miner address which means it will have funds. 
+The private key is the miner address, which contains Ether. 
 
-Once this is done, you can continue with the [regular tutorial steps](https://truffleframework.com/tutorials/pet-shop#directory-structure) on the Truffle website until Step 3 in the [Migration section](https://truffleframework.com/tutorials/pet-shop#migration).
+Once this is done, follow the [Truffle tutorial steps](https://truffleframework.com/tutorials/pet-shop#directory-structure)
+up to Step 3 in the [Migration section](https://truffleframework.com/tutorials/pet-shop#migration).
 
-#### Use Pantheon Private Network Instead of [Ganache](https://truffleframework.com/ganache)
+We're using the private network instead of [Ganache](https://truffleframework.com/ganache), so skip steps 3, 4, and 5 in
+the [Migration section](https://truffleframework.com/tutorials/pet-shop#migration). 
 
-We are going to use our private network instead of Ganache, so skip steps 3, 4, and 5 in the [Migration section](https://truffleframework.com/tutorials/pet-shop#migration). 
-
-In step 4, specify our private network: 
+In step 4, specify the private network: 
 
 ```bash
 truffle migrate --network quickstartWallet
@@ -383,9 +403,10 @@ Saving artifacts...
 
 Search for the deployed contracts and transactions in the block explorer using the addresses displayed in your output.
 
-Continue with the regular tutorial steps in the [Testing the smart contract section](https://truffleframework.com/tutorials/pet-shop#testing-the-smart-contract).
+Continue with the Truffle tutorial steps in the [Testing the smart contract](https://truffleframework.com/tutorials/pet-shop#testing-the-smart-contract) section.
 
-To run the tests in the [Running the tests section](https://truffleframework.com/tutorials/pet-shop#running-the-tests), specify our private network: 
+To run the tests in the [Running the tests](https://truffleframework.com/tutorials/pet-shop#running-the-tests) section,
+specify the private network: 
 
 ```bash
 truffle test --network quickstartWallet
@@ -410,61 +431,66 @@ Compiling truffle/DeployedAddresses.sol...
   3 passing (37s)
 ```
 
-Continue with the regular tutorial steps in the [Creating a user interface to interact with the smart contract section](https://truffleframework.com/tutorials/pet-shop#creating-a-user-interface-to-interact-with-the-smart-contract).
+Continue with the Truffle tutorial steps in the [Creating a user interface to interact with the smart contract](https://truffleframework.com/tutorials/pet-shop#creating-a-user-interface-to-interact-with-the-smart-contract) section.
 
-We have already connected our private network to MetaMask so you can skip the [Installing and configuring MetaMask section](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask).
+We've already connected the private network to MetaMask, so you can skip the [Installing and configuring MetaMask](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-metamask) section.
 
-Continue with the regular tutorial steps from the [Installing and configuring lite-server section](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-lite-server) to the end of the tutorial.
+Continue with the regular tutorial steps from the [Installing and configuring lite-server](https://truffleframework.com/tutorials/pet-shop#installing-and-configuring-lite-server)
+section and finish the tutorial.
 
-When you adopt pets in the browser and approve the transaction in MetaMask, you will be able to see the transactions in the block explorer. 
+When you adopt pets in the browser and approve the transaction in MetaMask, you'll be able to see the transactions in the block explorer.
 
-## Shut Down the Network and Remove the Containers
- 
-To shut down the network and delete all containers:
 
-```bash tab="Linux/macOS"
-# Shell script are provided in the Quickstart directory
+## Stop / Restart Private Network without Removing Containers 
 
-quickstart/removePantheonPrivateNetwork.sh
+To shut down the private network without deleting the containers:
+
+```bash tab="Linux/MacOS"
+# Stop the containers:
+
+./stop.sh
 ```
 
-```bat tab="Windows"
-// Run the docker-compose commands directly
+```bash tab="Windows"
+// Stop the containers:
 
-quickstart\docker-compose down
+.\stop.sh
 ```
 
-!!!note
-    On Windows, the quickstart creates a volume called `quickstart_public-keys` but it's not automatically removed. Remove this volume using `docker volume rm quickstart_public-keys`.
-
-## Stop and restart the Private Network without Removing the Containers 
-
-To shut down the network without deleting the containers:
-
-```bash tab="Linux/macOS"
-# Shell script are provided in the Quickstart directory
-
-quickstart/stopPantheonPrivateNetwork.sh
-```
-
-```bat tab="Windows"
-// Run the docker-compose commands directly
-
-quickstart\docker-compose stop
-```
-
-(This command will also stop other running containers unrelated to quickstart.)
+!!! note
+    This command will also stop other running Docker containers unrelated to the Pantheon quickstart.
 
 To restart the private network:
 
-```bash tab="Linux/macOS"
-# Shell script are provided in the Quickstart directory
+```bash tab="Linux/MacOS"
+# Start the containers:
 
-quickstart/resumePantheonPrivateNetwork.sh
+./start.sh
 ```
 
-```bat tab="Windows"
-// Run the docker-compose commands directly
+```bash tab="Windows"
+// Start the containers:
 
-quickstart\docker-compose start
+.\start.sh
 ```
+
+
+## Stop Private Network and Remove Containers
+
+To shut down the private network and delete all containers:
+
+```bash tab="Linux/MacOS"
+# Stop and delete the containers:
+
+./remove.sh
+```
+
+```bash tab="Windows"
+// Stop and delete the containers:
+
+.\remove.sh
+```
+
+!!! info "Windows"
+    On Windows, the Pantheon quickstart creates a volume called `quickstart_public-keys`, which is not automatically 
+    removed. Remove this volume using `docker volume rm quickstart_public-keys`.
