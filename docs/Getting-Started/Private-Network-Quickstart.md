@@ -7,10 +7,10 @@ description: Pantheon private network quickstart tutorial
     In v0.9, the Private Network Quickstart moved to a separate repository, and the previous version was removed from
     the Pantheon repository.
 
-This tutorial describes how to use Pantheon to run a private network of Pantheon nodes in a Docker container.
+This tutorial describes how to use Pantheon 0.8.5 Docker image to run a private network with multiple Pantheon nodes orchestrated by Docker Compose.
 
 !!! note
-    To run the Private Network Quickstart, install the code by cloning the `pantheon-quickstart` repo as described below.
+    To run the Private Network Quickstart, clone the `pantheon-quickstart` repo as described below.
     
     If you have installed Pantheon from the [packaged binaries](../Installation/Install-Binaries.md) or are running the
     [Docker image](Run-Docker-Image.md), you can proceed with [Starting Pantheon](Starting-Pantheon.md).
@@ -35,16 +35,16 @@ To run this tutorial, you must have the following installed:
 the MetaMask plug-in installed. This tutorial uses screenshots from Brave.
 
 
-## Clone Pantheon Source Code
+## Clone Pantheon Quickstart Source Code
 
 Clone the repository from the `pantheon-quickstart` repo:
 
 ```bash
-$ git clone --recursive https://github.com/PegaSysEng/pantheon-quickstart.git
+$ git clone --branch 0.8.5 https://github.com/PegaSysEng/pantheon-quickstart.git
 ```
 
 
-## Start Services and Network
+## Build Docker Images and Start Services and Network
  
 This tutorial uses [Docker Compose](https://docs.docker.com/compose/) to simplify assembling images and 
 running in a private network. To build the docker images and run the containers, go to the directory in
@@ -159,7 +159,7 @@ You can run RPC requests on `rpcnode`, the node exposed to the host in order to 
     Using cURL via Command Prompt or Windows PowerShell might not work.
 
 For the RPC URL, this tutorial uses the placeholder `http://localhost:http-rpc-port`. When you run the tutorial, 
-replace `http-rpc-port` with the JSON-RPC HTTP service endpoint provided when you list the endpoints. (For example, 
+replace this placeholder with the JSON-RPC HTTP service endpoint provided when you list the endpoints. (For example,
 `http://localhost:32770/jsonrpc`.) The dynamic docker port mapping changes each time you run the network.
 
 
@@ -245,7 +245,8 @@ The result should be similar to the following:
 
 !!!info
     0x79f905c6fd34e80000 = 2250000000000000000000 Wei (2250 Ether).
-    Use a [unit converter](https://etherconverter.online/) to translate values from Wei to Ether.
+!!!tip
+    Use a [unit converter](https://etherconverter.online/) to easily translate values from Wei to Ether.
 
 Wait several seconds until new blocks are mined and call this again. The balance should increase, meaning the miner
 address successfully received the mining reward.
@@ -477,16 +478,16 @@ To restart the private network:
 
 ## Stop Private Network and Remove Containers
 
-To shut down the private network and delete all containers:
+To shut down the private network and delete all containers and images created during the quickstart:
 
 ```bash tab="Linux/MacOS"
-# Stop and delete the containers:
+# Stop services and delete related containers and images:
 
 ./remove.sh
 ```
 
 ```bash tab="Windows"
-// Stop and delete the containers:
+// Stop services and delete related containers and images:
 
 .\remove.sh
 ```
