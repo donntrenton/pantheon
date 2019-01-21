@@ -24,8 +24,9 @@ To run this tutorial, you must have the following installed:
 - For Windows: [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
 
     !!!important
-        Docker for Windows requires Windows 10 Pro, Enterprise, or Education.
-        The Private Network Quickstart does not support Docker Toolbox.
+        Docker for Windows requires Windows 10 Pro, Enterprise, or Education on a physical Windows computer (not a 
+        local or cloud VM). The Private Network Quickstart does not support Docker Toolbox. If you run Windows command
+        prompt, make sure to select **Run As Administrator**.
 
 - [Git command line](https://git-scm.com/)
 
@@ -182,6 +183,9 @@ The result should be as follows:
 ```
 Here we simply query the version of the Pantheon node, which confirms the node is running.
 
+Successfully calling this method shows that you can connect to the nodes via RPC. From here, you can walk through more 
+interesting requests demonstrated in the rest of this section, or skip ahead to 
+[Creating a Transaction Using MetaMask](#creating-a-transaction-using-metamask).
 
 ### Counting Peers
 
@@ -254,7 +258,7 @@ You can also view this information in the block explorer. It does exactly the sa
 to the RPC node using HTTP JSON-RPC, and displaying information on a web page.
 
 
-### Creating a Transaction Using MetaMask
+## Creating a Transaction Using MetaMask
 
 Now let's use [MetaMask](https://metamask.io/) to send transactions.
 
@@ -297,7 +301,7 @@ Refresh the browser page that displays the new account. The updated balance is d
 completed using MetaMask.
 
 
-### Truffle Pet Shop Tutorial
+## Truffle Pet Shop Tutorial
 
 With a few modifications, we can use the private network in this tutorial as the blockchain for the 
 [PetShop tutorial on Truffle website](https://truffleframework.com/tutorials/pet-shop).
@@ -457,8 +461,7 @@ To shut down the private network without deleting the containers:
 .\stop.sh
 ```
 
-!!! note
-    This command will also stop other running Docker containers unrelated to the Pantheon quickstart.
+This command will stop the containers related to the services specified in the `docker-compose.yml` file.
 
 To restart the private network:
 
