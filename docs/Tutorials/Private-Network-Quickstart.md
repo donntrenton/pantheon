@@ -4,29 +4,22 @@ description: Pantheon private network quickstart tutorial
 # Private Network Quickstart tutorial
 
 !!! important
-    In v0.9, the Private Network Quickstart moved to a separate repository, and the previous version was removed from
-    the Pantheon repository.
+    In v0.9, the Private Network Quickstart moved to the `pantheon-quickstart` repository. The previous version was removed from
+    the `pantheon` repository.
 
-This tutorial describes how to use Pantheon 0.8.5 Docker image to run a private network with multiple Pantheon nodes orchestrated by Docker Compose.
-
-!!! note
-    To run the Private Network Quickstart, clone the `pantheon-quickstart` repo as described below.
-    
-    If you have installed Pantheon from the [packaged binaries](../Installation/Install-Binaries.md) or are running the
-    [Docker image](Run-Docker-Image.md), you can proceed with [Starting Pantheon](Starting-Pantheon.md).
+The Private Network Quickstart uses the Pantheon Docker image to run a private network of Pantheon nodes managed by Docker Compose.
 
 ## Prerequisites
 
 To run this tutorial, you must have the following installed:
 
-- For MacOS and Linux: [Docker and Docker-compose](https://docs.docker.com/compose/install/) 
+- MacOS or Linux 
+    
+    !!! important 
+        The Private Network Quickstart is not supported on Windows. If using Windows, run the quickstart
+        inside a Linux VM such as Ubuntu. 
 
-- For Windows: [Docker for Windows](https://docs.docker.com/docker-for-windows/install/)
-
-    !!!important
-        Docker for Windows requires Windows 10 Pro, Enterprise, or Education on a physical Windows computer (not a 
-        local or cloud VM). The Private Network Quickstart does not support Docker Toolbox. If you run Windows command
-        prompt, make sure to select **Run As Administrator**.
+- [Docker and Docker-compose](https://docs.docker.com/compose/install/) 
 
 - [Git command line](https://git-scm.com/)
 
@@ -38,36 +31,27 @@ the MetaMask plug-in installed. This tutorial uses screenshots from Brave.
 
 ## Clone Pantheon Quickstart Source Code
 
-Clone the repository from the `pantheon-quickstart` repo:
+Clone the repository from the `pantheon-quickstart` repository where `<version>` is replaced with the latest version (for example, `0.8.5`):
 
-```bash
-$ git clone --branch 0.8.5 https://github.com/PegaSysEng/pantheon-quickstart.git
+```bash tab="Linux/MacOS"
+git clone --branch <version> https://github.com/PegaSysEng/pantheon-quickstart.git
+```
+
+```bash tab="Example"
+git clone --branch 0.8.5 https://github.com/PegaSysEng/pantheon-quickstart.git
 ```
 
 
 ## Build Docker Images and Start Services and Network
  
-This tutorial uses [Docker Compose](https://docs.docker.com/compose/) to simplify assembling images and 
-running in a private network. To build the docker images and run the containers, go to the directory in
-which you cloned the `pantheon-quickstart` repo and run:
+This tutorial uses [Docker Compose](https://docs.docker.com/compose/) to assemble the images and 
+run the private network. To build the docker images and run the containers, go to the `pantheon-quickstart` directory and run:
 
 ```bash tab="Linux/MacOS"
-# Run the containers:
-
 ./run.sh
 ```
 
-```bash tab="Windows"
-// Run the containers:
-
-.\run.sh
-```
-
-!!! note
-    In MacOS, the shell scripts list the containers and endpoints automatically. In Windows, you need to use
-    `docker-compose` commands as noted below.
-
-The `run.sh` script builds Pantheon, builds the images, and runs the containers. It also scales the regular node 
+The `run.sh` script builds the images, and runs the containers. It also scales the regular node 
 container to four containers to simulate a network with enough peers to synchronize.
 
 When the process ends, it lists the running services:
@@ -86,7 +70,7 @@ When the process ends, it lists the running services:
     quickstart_rpcnode_1     /opt/pantheon/node_start.s ...   Up      30303/tcp, 0.0.0.0:32769->8545/tcp, 0.0.0.0:32768->8546/tcp
     ```
 
-This is followed by a list of the endpoints:
+Followed by a list of the endpoints:
 
 !!! example "Endpoint list example"
     ```log
@@ -106,19 +90,8 @@ entering the URL in your web browser.
 To display the list of endpoints again, run:
 
 ```bash tab="Linux/MacOS"
-# List the running containers:
-
 ./list.sh
 ```
-
-```bash tab="Windows"
-// List the containers and endpoints using docker-compose commands:
-
-docker-compose ps
-
-docker-compose port explorer 80
-```
-
 
 ## Block Explorer
 
@@ -129,25 +102,21 @@ This tutorial uses the [Alethio](https://aleth.io/) light block explorer.
 Access the explorer by copying and pasting the `Web block explorer address` displayed when starting the private network
 to your browser.
 
-!!! info "Windows"
-    On Windows, the docker-compose commands return a number such as `0.0.0.0:32777`, where the port number follows the
-    colon. You have to construct the block explorer URL using this port number; for example: `http://localhost:32777`.
-
 The block explorer displays a summary of the private network:
 
-![Block Explorer](ExplorerSummary.png)
+![Block Explorer](../Getting-Started/ExplorerSummary.png)
 
 Notice that the explorer indicates 6 peers: the 4 regular nodes, the mining node and the bootnode.
 
 Click the block number to the right of **Best Block** to display the block details:
 
-![Block Details](ExplorerBlockDetails.png)
+![Block Details](../Getting-Started/ExplorerBlockDetails.png)
 
 You can explore blocks by clicking on the blocks under **Bk** on the left-hand side.
 
 You can search for a specific block, transaction hash, or address by clicking the magnifying glass in the top left-hand corner.
 
-![Explorer Search](ExplorerSearch.png)
+![Explorer Search](../Getting-Started/ExplorerSearch.png)
 
 
 ## Run JSON-RPC Requests 
@@ -155,11 +124,7 @@ You can search for a specific block, transaction hash, or address by clicking th
 You can run RPC requests on `rpcnode`, the node exposed to the host in order to listen for requests. This tutorial uses 
 [cURL](https://curl.haxx.se/download.html) to make JSON-RPC requests.
 
-!!! tip "Windows"
-    We recommend using [Postman](https://www.getpostman.com/) or a similar client to make RPC requests on Windows.
-    Using cURL via Command Prompt or Windows PowerShell might not work.
-
-For the RPC URL, this tutorial uses the placeholder `http://localhost:http-rpc-port`. When you run the tutorial, 
+For the RPC URL, this tutorial uses the placeholder `http://localhost:<http-rpc-port>`. When you run the tutorial, 
 replace this placeholder with the JSON-RPC HTTP service endpoint provided when you list the endpoints. (For example,
 `http://localhost:32770/jsonrpc`.) The dynamic docker port mapping changes each time you run the network.
 
@@ -169,10 +134,10 @@ replace this placeholder with the JSON-RPC HTTP service endpoint provided when y
 Run the following command from the host shell:
 
 ```bash
-curl -X POST --data '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}' http://localhost:http-rpc-port
+curl -X POST --data '{"jsonrpc":"2.0","method":"web3_clientVersion","params":[],"id":1}' http://localhost:<http-rpc-port>
 ```
 
-The result should be as follows: 
+The result specifies the client version: 
 
 ```json
 {
@@ -194,10 +159,10 @@ Peers are the number of other nodes connected to the RPC node.
 Poll the peer count using `net_peerCount`:
 
 ```bash
-curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' http://localhost:http-rpc-port
+curl -X POST --data '{"jsonrpc":"2.0","method":"net_peerCount","params":[],"id":1}' http://localhost:<http-rpc-port>
 ```
 
-The result should be the following response, indicating that there are 6 peers:
+The result indicates that there are 6 peers:
 
 ```json
 {
@@ -209,15 +174,13 @@ The result should be the following response, indicating that there are 6 peers:
 
 ### Requesting the Most Recently Mined Block Number  
 
-This provides the count of blocks already mined.
-
-To do so, call `eth_blockNumber` to retrieve the number of the most recent block:
+Call `eth_blockNumber` to retrieve the number of the most recent block:
 
 ```bash
-curl -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' http://localhost:http-rpc-port
+curl -X POST --data '{"jsonrpc":"2.0","method":"eth_blockNumber","params":[],"id":1}' http://localhost:<http-rpc-port>
 ```
 
-The result of this call should be:
+The result provides the most recently mined block:
 
 ```json
 {
@@ -229,15 +192,15 @@ The result of this call should be:
 
 The hexadecimal value `0x8b8` translates to `2232` in decimal, the number of blocks that have been mined so far.
 
-### Checking the Miner Account Balance (Coinbase)
+### Checking the Miner Account Balance 
 
-Then call `eth_getBalance` to retrieve the balance of the mining address defined in the miner node:
+Call `eth_getBalance` to retrieve the balance of the mining address (coinbase) defined in the miner node:
 
 ```bash
-curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xfe3b557e8fb62b89f4916b721be55ceb828dbd73","latest"],"id":1}' http://localhost:http-rpc-port
+curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBalance","params":["0xfe3b557e8fb62b89f4916b721be55ceb828dbd73","latest"],"id":1}' http://localhost:<http-rpc-port>
 ```
 
-The result should be similar to the following:
+The result specifies the miner account balance:
 
 ```json
 {
@@ -252,10 +215,10 @@ The result should be similar to the following:
 !!!tip
     Use a [unit converter](https://etherconverter.online/) to easily translate values from Wei to Ether.
 
-Wait several seconds until new blocks are mined and call this again. The balance should increase, meaning the miner
+Wait several seconds until new blocks are mined and call `eth_getBalance` again. The balance increases, meaning the miner
 address successfully received the mining reward.
 
-You can also view this information in the block explorer. It does exactly the same thing as this call did, connecting
+You can also view this information in the block explorer. It does exactly the same thing as this call, connecting
 to the RPC node using HTTP JSON-RPC, and displaying information on a web page.
 
 
@@ -269,8 +232,8 @@ of this private test network.
 {!global/test_accounts.md!}
 
 !!!note
-    Pantheon doesn't provide an accounts management system, so if you want to create your own account, you have to use
-    a third-party tool such as MetaMask.
+    Pantheon doesn't implement [account management](../Using-Pantheon/Account-Management.md). To create your own account, 
+    you have to use a third-party tool such as MetaMask.
 
 After you sign in to MetaMask, connect to the private network RPC endpoint:
 
@@ -289,7 +252,7 @@ using the corresponding private key.
 Once this is done, [create another account from scratch](https://metamask.zendesk.com/hc/en-us/articles/360015289452-Creating-Additional-MetaMask-Wallets-New-UI-)
 to send Ether to.
 
-In MetaMask, select the new account and copy the account address by clicking the **...** gadget, then selecting 
+In MetaMask, select the new account and copy the account address by clicking the **...** gadget and selecting 
 **Copy Address to clipboard**.
 
 In the block explorer, search for the new account by clicking on the magnifying glass and pasting the account address
@@ -451,50 +414,21 @@ When you adopt pets in the browser and approve the transaction in MetaMask, you'
 To shut down the private network without deleting the containers:
 
 ```bash tab="Linux/MacOS"
-# Stop the containers:
-
 ./stop.sh
 ```
 
-```bash tab="Windows"
-// Stop the containers:
-
-.\stop.sh
-```
-
-This command will stop the containers related to the services specified in the `docker-compose.yml` file.
+This command stops the containers related to the services specified in the `docker-compose.yml` file.
 
 To restart the private network:
 
 ```bash tab="Linux/MacOS"
-# Start the containers:
-
 ./start.sh
 ```
-
-```bash tab="Windows"
-// Start the containers:
-
-.\start.sh
-```
-
 
 ## Stop Private Network and Remove Containers
 
 To shut down the private network and delete all containers and images created during the quickstart:
 
 ```bash tab="Linux/MacOS"
-# Stop services and delete related containers and images:
-
 ./remove.sh
 ```
-
-```bash tab="Windows"
-// Stop services and delete related containers and images:
-
-.\remove.sh
-```
-
-!!! info "Windows"
-    On Windows, the Pantheon quickstart creates a volume called `quickstart_public-keys`, which is not automatically 
-    removed. Remove this volume using `docker volume rm quickstart_public-keys`.
